@@ -1,0 +1,19 @@
+- 24 calender
+- loker
+- submit answers
+- 
+
+
+
+
+
+API
+
+///endpoints
+	/calender
+	/day-1
+	/register
+	/login
+	/logout
+	/mypage
+	/admin
