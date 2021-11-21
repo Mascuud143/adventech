@@ -27,13 +27,44 @@ module.exports.protect = async (req, res, next) => {
         },
       });
     }
+
+    //check if user exists
+    const existingUser = await User.findById(decoded.user_id);
+    if (!existingUser[0][0]) {
+      return res.status(200).json({
+        status: "fail",
+        error: {
+          message: "user does not exist!",
+        },
+      });
+    }
+
+    //check if user changed password
+    const passwordLastChanged = existingUser[0][0].password_last_changed;
+    const passwordLastChangedTime =
+      new Date(passwordLastChanged).getTime() / 1000;
+    console.log(passwordLastChangedTime);
+    if (Number(passwordLastChangedTime) > decoded.iat) {
+      return res.status(200).json({
+        status: "fail",
+        error: {
+          message: "User has changed password recently, Please login again!",
+        },
+      });
+    }
   } catch (err) {
-    console.log(err);
+    return res.status(200).json({
+      status: "fail",
+      error: {
+        message: err,
+      },
+    });
   }
 
   next();
 };
 
+/*--------------------------------*/
 module.exports.login = async (req, res) => {
   const { username, password } = req.body;
 
@@ -68,6 +99,7 @@ module.exports.login = async (req, res) => {
       { user_id: user[0][0].user_id },
       process.env.JWT_SECRET,
       {
+        // expiresIn: process.env.JWT_EXPIRES,
         expiresIn: "90d",
       }
     );

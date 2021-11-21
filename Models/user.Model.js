@@ -2,9 +2,16 @@ const db = require("../util/db");
 const bcrypt = require("bcrypt");
 
 class User {
-  async create({ username, password }) {
-    const sql = `INSERT INTO user ( username, password) VALUES (?,?);`;
-    return db.execute(sql, [username, password]);
+  async create({ username, password, passwordLastChanged }) {
+    const now = new Date();
+    const createdAt = new Date();
+    const sql = `INSERT INTO user ( username, password, password_last_changed, created_at) VALUES (?,?,?,?);`;
+    return db.execute(sql, [
+      username,
+      password,
+      passwordLastChanged || now,
+      createdAt,
+    ]);
   }
 
   async findById(id) {

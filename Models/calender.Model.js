@@ -8,12 +8,8 @@ class Calender {
   }
 
   async findById(id) {
-    const sql = `SELECT * FROM user WHERE user_id = ?;`;
+    const sql = `SELECT * FROM calender WHERE title = ?;`;
     return db.execute(sql, [id]);
-  }
-  async findByUsername(username) {
-    const sql = `SELECT * FROM user WHERE username = ?;`;
-    return db.execute(sql, [username]);
   }
 
   async find() {

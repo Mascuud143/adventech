@@ -16,7 +16,7 @@ module.exports.register = async (req, res) => {
     bcrypt.hash(user.password, salt, async (err, hash) => {
       //reassign user password with the hashed password
       user.password = hash;
-
+      console.log(user);
       //create user
       try {
         const newUser = await User.create(user);
@@ -28,10 +28,11 @@ module.exports.register = async (req, res) => {
           },
         });
       } catch (err) {
+        console.log(err);
         return res.status(400).json({
           status: "fail",
           error: {
-            message: err.sqlMessage,
+            message: err,
           },
         });
       }
